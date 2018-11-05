@@ -216,7 +216,7 @@ let g:ale_lint_on_save = 1
 let g:NERDSpaceDelims=1
 
 " markdown peview settings
-let g:mkdp_auto_start = 1
+let g:mkdp_auto_start = 0
 
 " 设置tagbar执行程序位置
 let g:tagbar_ctags_bin = "`brew --prefix`/bin/ctags"
@@ -299,6 +299,8 @@ endfunction
 " ycm close preview
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_server_python_interpreter='/usr/bin/python'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 
 " vim-vue stop check preprocessor
 let g:vue_disable_pre_processors = 1

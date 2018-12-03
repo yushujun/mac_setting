@@ -1,34 +1,32 @@
-" vundle 环境设置
-set rtp+=~/.vim/bundle/Vundle.vim
-" vundle 管理的插件列表必须位于 vundle  # begin() 和 vundle#end() 之间
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim' " 插件管理
-Plugin 'tomasr/molokai' " molokai vim主题
-Plugin 'vim-airline/vim-airline' " airline状态栏美化
-Plugin 'vim-airline/vim-airline-themes' " 状态栏主题包
-Plugin 'nathanaelkane/vim-indent-guides' " 代码块竖线
-Plugin 'scrooloose/nerdtree' " 加入NERDTree
-Plugin 'scrooloose/nerdcommenter' " 代码注释
-Plugin 'dyng/ctrlsf.vim' " 搜索功能
-Plugin 'SirVer/ultisnips' " 预定义模板
-Plugin 'honza/vim-snippets' " 模板库
-Plugin 'Valloric/YouCompleteMe' " 补全插件
-Plugin 'terryma/vim-multiple-cursors' " 多光标操作
-Plugin 'christoomey/vim-tmux-navigator' " tmux - vim中Ctrl + h, j, k, l光标冲突解决
-Plugin 'tpope/vim-fugitive' " 显示git branch
-Plugin 'alvan/vim-closetag' " html自动补全
-Plugin 'jiangmiao/auto-pairs' " 符号自动补全
-Plugin 'godlygeek/tabular' " 按符号自动对齐如: Tab /= , : Tab /|
-Plugin 'iamcco/mathjax-support-for-mkdp' " mardown实时预览辅助插件
-Plugin 'iamcco/markdown-preview.vim' " mardown实时预览插件
-Plugin 'kien/ctrlp.vim' " CtrlP文件搜索
-Plugin 'marijnh/tern_for_vim' " js语法支持
-Plugin 'w0rp/ale' " 语法提示
-Plugin 'majutsushi/tagbar' " tagbar显示文件大纲
-Plugin 'posva/vim-vue' " vue语法提示
-Plugin 'wavded/vim-stylus' " stylus语法提示
-" 插件列表结束
-call vundle#end()
+" vim-plug install list
+call plug#begin('~/.vim/autoload')
+" Declare the list of plugins.
+Plug 'tomasr/molokai' " molokai vim主题
+Plug 'vim-airline/vim-airline' " airline状态栏美化
+Plug 'vim-airline/vim-airline-themes' " 状态栏主题包
+Plug 'nathanaelkane/vim-indent-guides' " 代码块竖线
+Plug 'scrooloose/nerdtree' " 加入NERDTree
+Plug 'scrooloose/nerdcommenter' " 代码注释
+Plug 'dyng/ctrlsf.vim' " 搜索功能
+Plug 'SirVer/ultisnips' " 预定义模板
+Plug 'honza/vim-snippets' " 模板库
+Plug 'Valloric/YouCompleteMe' " 补全插件
+Plug 'terryma/vim-multiple-cursors' " 多光标操作
+Plug 'christoomey/vim-tmux-navigator' " tmux - vim中Ctrl + h, j, k, l光标冲突解决
+Plug 'tpope/vim-fugitive' " 显示git branch
+Plug 'alvan/vim-closetag' " html自动补全
+Plug 'jiangmiao/auto-pairs' " 符号自动补全
+Plug 'godlygeek/tabular' " 按符号自动对齐如: Tab /= , : Tab /|
+Plug 'iamcco/mathjax-support-for-mkdp' " mardown实时预览辅助插件
+Plug 'iamcco/markdown-preview.vim' " mardown实时预览插件
+Plug 'kien/ctrlp.vim' " CtrlP文件搜索
+Plug 'marijnh/tern_for_vim' " js语法支持
+Plug 'w0rp/ale' " 语法提示
+Plug 'majutsushi/tagbar' " tagbar显示文件大纲
+Plug 'posva/vim-vue' " vue语法提示
+Plug 'wavded/vim-stylus' " stylus语法提示
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
 
 " 开启文件类型侦测
 " 根据侦测到的不同类型加载对应的插件
@@ -51,6 +49,8 @@ nnoremap <F3> :set cursorcolumn!<CR>
 map <F4> :%!python -m json.tool<CR>
 " 开启/关闭taglist
 nmap <F8> :TagbarToggle<CR>
+" 修改窗口交换键
+nnoremap <silent> <C-x> <c-w>x
 " 开启/关闭格式化粘贴
 set pastetoggle=<F9>
 
@@ -225,7 +225,6 @@ let g:tagbar_ctags_bin = "`brew --prefix`/bin/ctags"
 let g:closetag_filenames="*.xml,*.html,*.xhtml,*.phtml,*.php,*.vue,*.js"
 auto FileType xml,html,php,xhtml,js let b:delimitMate_matchpairs="(:),[:],{:}"
 
-
 " nerdcommenter vue文件注释
 let g:SynDebug = 0
 map <leader>cd :call ToggleDebug()<CR>
@@ -300,7 +299,24 @@ endfunction
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_server_python_interpreter='/usr/bin/python'
-let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/autoload/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
 
 " vim-vue stop check preprocessor
 let g:vue_disable_pre_processors = 1
+
+" <F5> 运行shell、python、javascript、c等程序
+map <C-r> :call CompileRunFile()<CR>
+func! CompileRunFile()
+  exec 'w'
+  if &filetype == 'c'
+    exec '!clear && gcc % -o %< && ./%<'
+  elseif &filetype == 'cpp'
+    exec '!clear && g++ % -o %< && ./%<'
+  elseif &filetype == 'python'
+    exec '!clear && python %'
+  elseif &filetype == 'javascript'
+    exec '!clear && node %'
+  elseif &filetype == 'sh'
+    exec '!clear && bash %'
+  endif
+endfunc

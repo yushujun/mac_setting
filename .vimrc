@@ -4,27 +4,22 @@ call plug#begin('~/.vim/autoload')
 Plug 'tomasr/molokai' " molokai vim主题
 Plug 'vim-airline/vim-airline' " airline状态栏美化
 Plug 'vim-airline/vim-airline-themes' " 状态栏主题包
-Plug 'nathanaelkane/vim-indent-guides' " 代码块竖线
-Plug 'scrooloose/nerdtree' " 加入NERDTree
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' } " 加入NERDTree
 Plug 'scrooloose/nerdcommenter' " 代码注释
-Plug 'dyng/ctrlsf.vim' " 搜索功能
-Plug 'SirVer/ultisnips' " 预定义模板
-Plug 'honza/vim-snippets' " 模板库
 Plug 'Valloric/YouCompleteMe' " 补全插件
 Plug 'terryma/vim-multiple-cursors' " 多光标操作
 Plug 'christoomey/vim-tmux-navigator' " tmux - vim中Ctrl + h, j, k, l光标冲突解决
-Plug 'tpope/vim-fugitive' " 显示git branch
 Plug 'alvan/vim-closetag' " html自动补全
 Plug 'jiangmiao/auto-pairs' " 符号自动补全
-Plug 'godlygeek/tabular' " 按符号自动对齐如: Tab /= , : Tab /|
-Plug 'iamcco/mathjax-support-for-mkdp' " mardown实时预览辅助插件
-Plug 'iamcco/markdown-preview.vim' " mardown实时预览插件
-Plug 'kien/ctrlp.vim' " CtrlP文件搜索
-Plug 'marijnh/tern_for_vim' " js语法支持
+Plug 'iamcco/markdown-preview.vim', { 'for': 'markdown' } " mardown实时预览插件
 Plug 'w0rp/ale' " 语法提示
 Plug 'majutsushi/tagbar' " tagbar显示文件大纲
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' } "异步搜索fzf基础依赖
+Plug 'junegunn/fzf.vim' " 异步搜索fzf vim 插件
 Plug 'posva/vim-vue' " vue语法提示
 Plug 'wavded/vim-stylus' " stylus语法提示
+Plug 'junegunn/vim-easy-align' " 文件对齐
+Plug 'ludovicchabant/vim-gutentags' " tags管理
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -67,8 +62,12 @@ set history=200
 " 设置删除空格数
 set backspace=2
 
+" 设置tags
+set tags=./.tags;,.tags
+
 " 设置快捷键将选中文本块复制至系统剪贴板
 vnoremap <leader>y "+y
+nmap <leader>y "+y
 " 剪切到系统粘贴板
 vnoremap <leader>d "+dd
 nmap <leader>d "+dd
@@ -84,15 +83,16 @@ nmap <leader>WQ :wa<CR>:q<CR>
 nmap <leader>Q :qa!<CR>
 
 " 配色方案
-let g:molokai_original=1
-let g:rehash256=1
+let g:molokai_original = 1
+let g:rehash256 = 1
 colorscheme molokai
 " 设置状态栏主题风格
-let g:airline_theme='bubblegum'
-let g:airline_powerline_fonts=1
-let g:airline#extensions#branch#enabled=1
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#buffer_nr_show=1
+let g:airline_theme = 'bubblegum'
+let g:airline_powerline_fonts = 0
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:gui_med_gray_hi = '#1c1c1c'
 
 " 禁止光标闪烁
 set gcr=a:block-blinkon0
@@ -166,18 +166,16 @@ autocmd FileType python,shell,bash set softtabstop=4
 " 对于markdown文件需要进行换行方便书写
 autocmd FileType markdown set wrap
 
-" CtrlSF搜索
-" 默认程序为ACK而不是AG
-let g:ctrlsf_ackprg='ack'
-" 修改ctrlsf快捷键
-nnoremap <leader>g :CtrlSF<Space>
-" ctrlsf搜索忽略目录
-let g:ctrlsf_ignore_dir=["node_modules", "static"]
+" fzf搜索文件设置
+nmap <leader>s :GFiles<CR>
+" fzf搜索内容设置
+nmap <leader>g :Ag<Space>
 
-" CtrlP文件搜索
-let g:ctrlp_custom_ignore='\v[\/](node_modules|static|dist)|(\.(swp|ico|git|svn))$'
-let g:ctrlp_map='<leader>s'
-"let g: ctrlp_match_window = 'min:4,max:10,results:100'
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap <leader>a <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap <leader>a <Plug>(EasyAlign)
 
 " NERDTree config
 map <leader>f :NERDTreeToggle<CR>
@@ -213,17 +211,31 @@ let g:ale_lint_on_text_changed = 0
 let g:ale_lint_on_save = 1
 
 " 注释的时候自动加个空格, 强迫症必配
-let g:NERDSpaceDelims=1
+let g:NERDSpaceDelims = 1
 
 " markdown peview settings
 let g:mkdp_auto_start = 0
 
-" 设置tagbar执行程序位置
-let g:tagbar_ctags_bin = "`brew --prefix`/bin/ctags"
-
 " 用于解决vim-closetag和delimitMate在写html导致<html></html>>多一个>的情况
 let g:closetag_filenames="*.xml,*.html,*.xhtml,*.phtml,*.php,*.vue,*.js"
 auto FileType xml,html,php,xhtml,js let b:delimitMate_matchpairs="(:),[:],{:}"
+
+" gtags配置
+" gutentags 搜索工程目录的标志，当前文件路径向上递归直到碰到这些文件/目录名
+let g:gutentags_project_root = ['.root', '.git', '.hg', '.project']
+" 所生成的数据文件的名称
+let g:gutentags_ctags_tagfile = '.tags'
+" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
+let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazSl', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+" 检测 ~/.cache/tags 不存在就新建
+if !isdirectory(s:vim_tags)
+   silent! call mkdir(s:vim_tags, 'p')
+ endif
 
 " nerdcommenter vue文件注释
 let g:SynDebug = 0

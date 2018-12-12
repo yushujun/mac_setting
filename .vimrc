@@ -19,7 +19,8 @@ Plug 'junegunn/fzf.vim' " 异步搜索fzf vim 插件
 Plug 'posva/vim-vue' " vue语法提示
 Plug 'wavded/vim-stylus' " stylus语法提示
 Plug 'junegunn/vim-easy-align' " 文件对齐
-Plug 'ludovicchabant/vim-gutentags' " tags管理
+Plug 'skywind3000/asyncrun.vim'  " vim异步执行命令
+"Plug 'ludovicchabant/vim-gutentags' " tags管理
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -232,6 +233,7 @@ let g:gutentags_cache_dir = s:vim_tags
 let g:gutentags_ctags_extra_args = ['--fields=+niazSl', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_exclude = ['node_modules']
 " 检测 ~/.cache/tags 不存在就新建
 if !isdirectory(s:vim_tags)
    silent! call mkdir(s:vim_tags, 'p')
@@ -316,9 +318,28 @@ let g:ycm_global_ycm_extra_conf='~/.vim/autoload/YouCompleteMe/third_party/ycmd/
 " vim-vue stop check preprocessor
 let g:vue_disable_pre_processors = 1
 
-" <F5> 运行shell、python、javascript、c等程序
-map <C-r> :call CompileRunFile()<CR>
-func! CompileRunFile()
+" vim async run rs window
+let g:asyncrun_open = 8
+
+" <F5>或leader r 运行shell、python、javascript、c等程序
+map <leader>r :call CompileRunFileAsync()<CR>
+func! CompileRunFileAsync()
+  exec 'w'
+  if &filetype == 'c'
+    exec "AsyncRun! gcc % -o % && ./%<"
+  elseif &filetype == 'cpp'
+    exec "AsyncRun! g++ % -o % && ./%<"
+  elseif &filetype == 'python'
+    exec "AsyncRun! python %"
+  elseif &filetype == 'javascript'
+    exec "AsyncRun! node %"
+  elseif &filetype == 'sh'
+    exec "AsyncRun! bash %"
+  endif
+endfunc
+
+map <F5> :call CompileRunFileSync()<CR>
+func! CompileRunFileSync()
   exec 'w'
   if &filetype == 'c'
     exec '!clear && gcc % -o %< && ./%<'

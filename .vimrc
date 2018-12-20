@@ -30,7 +30,7 @@ filetype plugin indent on
 " 开启语法识别
 syntax enable
 " 定义快捷键的前缀，即<leader>
-let mapleader = ";"
+let mapleader = "\<Space>"
 " 映射esc为jk
 inoremap jk <esc>
 
@@ -142,15 +142,15 @@ nnoremap <leader>u :bp<CR>
 nnoremap <leader>o :bn<CR>
 nnoremap <leader>x :bd<CR>
 " 映射<leader > num到num buffer
-map <leader>1 :b1<CR>
-map <leader>2 :b2<CR>
-map <leader>3 :b3<CR>
-map <leader>4 :b4<CR>
-map <leader>5 :b5<CR>
-map <leader>6 :b6<CR>
-map <leader>7 :b7<CR>
-map <leader>8 :b8<CR>
-map <leader>9 :b9<CR>
+nmap <leader>1 :b1<CR>
+nmap <leader>2 :b2<CR>
+nmap <leader>3 :b3<CR>
+nmap <leader>4 :b4<CR>
+nmap <leader>5 :b5<CR>
+nmap <leader>6 :b6<CR>
+nmap <leader>7 :b7<CR>
+nmap <leader>8 :b8<CR>
+nmap <leader>9 :b9<CR>
 
 " python格式化
 autocmd FileType python nnoremap <leader>= :0,$!yapf<CR>
@@ -179,7 +179,7 @@ xmap <leader>a <Plug>(EasyAlign)
 nmap <leader>a <Plug>(EasyAlign)
 
 " NERDTree config
-map <leader>f :NERDTreeToggle<CR>
+nmap <leader>f :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree() == "primary") | q | endif
 
 " 默认开启NERDTree
@@ -220,6 +220,8 @@ let g:mkdp_auto_start = 0
 " 用于解决vim-closetag和delimitMate在写html导致<html></html>>多一个>的情况
 let g:closetag_filenames="*.xml,*.html,*.xhtml,*.phtml,*.php,*.vue,*.js"
 auto FileType xml,html,php,xhtml,js let b:delimitMate_matchpairs="(:),[:],{:}"
+" 解决空格键和leader键冲突
+let g:AutoPairsMapSpace=0
 
 " gtags配置
 " gutentags 搜索工程目录的标志，当前文件路径向上递归直到碰到这些文件/目录名
@@ -241,9 +243,7 @@ if !isdirectory(s:vim_tags)
 
 " nerdcommenter vue文件注释
 let g:SynDebug = 0
-map <leader>cd :call ToggleDebug()<CR>
-imap <leader>ci <SPACE><BS><ESC>:call Comment('Insert')<cr>
-map <leader>ca :call Comment('AltDelims')<cr>
+nmap <leader>cd :call ToggleDebug()<CR>
 xmap <leader>c$ :call Comment('ToEOL', 'x')<cr>
 nmap <leader>c$ :call Comment('ToEOL', 'n')<cr>
 xmap <leader>cA :call Comment('Append', 'x')<cr>
@@ -322,7 +322,7 @@ let g:vue_disable_pre_processors = 1
 let g:asyncrun_open = 8
 
 " <F5>或leader r 运行shell、python、javascript、c等程序
-map <leader>r :call CompileRunFileAsync()<CR>
+nmap <leader>r :call CompileRunFileAsync()<CR>
 func! CompileRunFileAsync()
   exec 'w'
   if &filetype == 'c'

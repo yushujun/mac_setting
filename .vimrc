@@ -74,14 +74,19 @@ vnoremap <leader>d "+dd
 nmap <leader>d "+dd
 " 设置快捷键将系统剪贴板内容粘贴至 vim
 nmap <leader>p "+p
-" 定义快捷键关闭当前分割窗口
-nmap <leader>q :q<CR>
-" 定义快捷键保存当前窗口内容
-nmap <leader>w :w<CR>
-" 定义快捷键保存所有窗口内容并退出 vim
-nmap <leader>WQ :wa<CR>:q<CR>
-" 不做任何保存，直接退出 vim
-nmap <leader>Q :qa!<CR>
+
+" save files
+inoremap <C-s> <esc>:w<cr>
+nnoremap <C-s> :w<cr>
+" quit discarding changes
+inoremap <C-q> <esc>:qa!<cr>
+nnoremap <C-q> :qa!<cr>
+
+" 解决stty会与<C-s> <C-q>冲突
+silent !stty -ixon > /dev/null 2>/dev/null
+
+" 禁止Q进入EX模式
+nnoremap Q <Nop>
 
 " 配色方案
 let g:molokai_original = 1

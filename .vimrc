@@ -79,8 +79,8 @@ nmap <leader>p "+p
 inoremap <C-s> <esc>:w<cr>
 nnoremap <C-s> :w<cr>
 " quit discarding changes
-inoremap <C-q> <esc>:qa!<cr>
-nnoremap <C-q> :qa!<cr>
+nnoremap <C-q> :q<cr>
+nnoremap <leader>Q :qa!<cr>
 
 " 解决stty会与<C-s> <C-q>冲突
 silent !stty -ixon > /dev/null 2>/dev/null

@@ -12,7 +12,7 @@ Plug 'christoomey/vim-tmux-navigator' " tmux - vim中Ctrl + h, j, k, l光标冲�
 Plug 'alvan/vim-closetag' " html自动补全
 Plug 'jiangmiao/auto-pairs' " 符号自动补全
 Plug 'iamcco/markdown-preview.vim', { 'for': 'markdown' } " mardown实时预览插件
-Plug 'w0rp/ale' " 语法提示
+Plug 'dense-analysis/ale' " 语法提示
 Plug 'majutsushi/tagbar' " tagbar显示文件大纲
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' } "异步搜索fzf基础依赖
 Plug 'junegunn/fzf.vim' " 异步搜索fzf vim 插件
@@ -20,7 +20,7 @@ Plug 'posva/vim-vue' " vue语法提示
 Plug 'wavded/vim-stylus' " stylus语法提示
 Plug 'junegunn/vim-easy-align' " 文件对齐
 Plug 'skywind3000/asyncrun.vim'  " vim异步执行命令
-"Plug 'ludovicchabant/vim-gutentags' " tags管理
+Plug 'ludovicchabant/vim-gutentags' " tags管理
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -228,23 +228,21 @@ auto FileType xml,html,php,xhtml,js let b:delimitMate_matchpairs="(:),[:],{:}"
 " 解决空格键和leader键冲突
 let g:AutoPairsMapSpace=0
 
-" gtags配置
 " gutentags 搜索工程目录的标志，当前文件路径向上递归直到碰到这些文件/目录名
-let g:gutentags_project_root = ['.root', '.git', '.hg', '.project']
+let g:gutentags_project_root = ['.root', '.git', '.project']
 " 所生成的数据文件的名称
 let g:gutentags_ctags_tagfile = '.tags'
 " 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
 let s:vim_tags = expand('~/.cache/tags')
 let g:gutentags_cache_dir = s:vim_tags
-" 配置 ctags 的参数
-let g:gutentags_ctags_extra_args = ['--fields=+niazSl', '--extra=+q']
-let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
-let g:gutentags_ctags_exclude = ['node_modules']
 " 检测 ~/.cache/tags 不存在就新建
 if !isdirectory(s:vim_tags)
    silent! call mkdir(s:vim_tags, 'p')
  endif
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazSl', '--extras=+q']
+let g:gutentags_ctags_extra_args += ['--python-kinds=-iv']
+let g:gutentags_ctags_exclude = ['node_modules']
 
 " nerdcommenter vue文件注释
 let g:SynDebug = 0
@@ -317,11 +315,13 @@ endfunction
 " ycm close preview
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_server_python_interpreter='/usr/bin/python'
+let g:ycm_server_python_interpreter='/usr/bin/python2.7'
 let g:ycm_global_ycm_extra_conf='~/.vim/autoload/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
 
 " vim-vue stop check preprocessor
 let g:vue_disable_pre_processors = 1
+" reslove vim-vue highlight randomly not work
+autocmd FileType vue syntax sync fromstart
 
 " vim async run rs window
 let g:asyncrun_open = 8

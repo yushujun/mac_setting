@@ -20,6 +20,7 @@ Plug 'posva/vim-vue' " vue语法提示
 Plug 'wavded/vim-stylus' " stylus语法提示
 Plug 'junegunn/vim-easy-align' " 文件对齐
 Plug 'skywind3000/asyncrun.vim'  " vim异步执行命令
+Plug 'davidhalter/jedi-vim', { 'for': 'python'} " python代码补全及跳转定义
 Plug 'ludovicchabant/vim-gutentags' " tags管理
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -316,12 +317,29 @@ endfunction
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_server_python_interpreter='/usr/bin/python2.7'
+let g:ycm_python_interpreter_path = '/usr/local/bin/python3'
+let g:ycm_python_sys_path = ['/usr/local/lib/python3.7/site-packages']
+let g:ycm_extra_conf_vim_data = [
+  \  'g:ycm_python_interpreter_path',
+  \  'g:ycm_python_sys_path'
+  \]
 let g:ycm_global_ycm_extra_conf='~/.vim/autoload/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
 
 " vim-vue stop check preprocessor
 let g:vue_disable_pre_processors = 1
 " reslove vim-vue highlight randomly not work
 autocmd FileType vue syntax sync fromstart
+
+" jedi configuration
+let g:jedi#goto_command = "<C-]>"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#goto_stubs_command = ""
+let g:jedi#goto_assignments_command = ""
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = ""
+let g:jedi#completions_command = ""
+let g:jedi#rename_command = ""
+let g:jedi#completions_enabled = 0
 
 " vim async run rs window
 let g:asyncrun_open = 8
@@ -335,7 +353,7 @@ func! CompileRunFileAsync()
   elseif &filetype == 'cpp'
     exec "AsyncRun! g++ % -o % && ./%<"
   elseif &filetype == 'python'
-    exec "AsyncRun! python %"
+    exec "AsyncRun! python3.7 %"
   elseif &filetype == 'javascript'
     exec "AsyncRun! node %"
   elseif &filetype == 'sh'
@@ -351,7 +369,7 @@ func! CompileRunFileSync()
   elseif &filetype == 'cpp'
     exec '!clear && g++ % -o %< && ./%<'
   elseif &filetype == 'python'
-    exec '!clear && python %'
+    exec '!clear && python3.7 %'
   elseif &filetype == 'javascript'
     exec '!clear && node %'
   elseif &filetype == 'sh'

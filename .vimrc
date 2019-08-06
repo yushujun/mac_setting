@@ -22,6 +22,7 @@ Plug 'junegunn/vim-easy-align' " 文件对齐
 Plug 'skywind3000/asyncrun.vim'  " vim异步执行命令
 Plug 'davidhalter/jedi-vim', { 'for': 'python'} " python代码补全及跳转定义
 Plug 'ludovicchabant/vim-gutentags' " tags管理
+Plug 'ternjs/tern_for_vim' " js语法补全
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -159,7 +160,7 @@ nmap <leader>8 :b8<CR>
 nmap <leader>9 :b9<CR>
 
 " python格式化
-autocmd FileType python nnoremap <leader>= :0,$!yapf<CR>
+autocmd FileType python nnoremap <leader>= :0,$!yapf --style='{column_limit=120}'<CR>
 
 "为不同的文件类型设置不同的空格数替换TAB
 autocmd FileType java,javascript,html,css,xml set ts=2
@@ -199,11 +200,13 @@ let NERDTreeIgnore=['\.pyc$']
 " After this is configured, :ALEFix will try and fix your JS code with ESLint.
 let g:ale_fixers = {
 \   'javascript': ['eslint'],
+\   'vuejs': ['eslint']
 \}
 
 let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'html': ['tidy-html5'],
+\   'vuejs': ['eslint', 'vls']
 \}
 
 " Set this setting in vimrc if you want to fix files automatically on save.
@@ -376,3 +379,7 @@ func! CompileRunFileSync()
     exec '!clear && bash %'
   endif
 endfunc
+
+" abbreviation
+iabbrev pdb import pdb;pdb.set_trace()
+

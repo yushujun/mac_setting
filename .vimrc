@@ -163,13 +163,13 @@ nmap <leader>9 :b9<CR>
 autocmd FileType python nnoremap <leader>= :0,$!yapf --style='{column_limit=120}'<CR>
 
 "为不同的文件类型设置不同的空格数替换TAB
-autocmd FileType java,javascript,html,css,xml set ts=2
-autocmd FileType java,javascript,html,css,xml set shiftwidth=2
-autocmd FileType java,javascript,html,css,xml set softtabstop=2
+autocmd FileType javascript,html,css,xml set ts=2
+autocmd FileType javascript,html,css,xml set shiftwidth=2
+autocmd FileType javascript,html,css,xml set softtabstop=2
 
-autocmd FileType python,shell,bash set ts=4
-autocmd FileType python,shell,bash set shiftwidth=4
-autocmd FileType python,shell,bash set softtabstop=4
+autocmd FileType python,java,shell,bash set ts=4
+autocmd FileType python,java,shell,bash set shiftwidth=4
+autocmd FileType python,java,shell,bash set softtabstop=4
 
 " 对于markdown文件需要进行换行方便书写
 autocmd FileType markdown set wrap
@@ -209,6 +209,8 @@ let g:ale_linters = {
 \   'vuejs': ['eslint', 'vls']
 \}
 
+" vim中使用python3作为python解释器
+let g:pymode_python = 'python3'
 " Set this setting in vimrc if you want to fix files automatically on save.
 " This is off by default.
 let g:ale_fix_on_save = 1
@@ -381,5 +383,5 @@ func! CompileRunFileSync()
 endfunc
 
 " abbreviation
-iabbrev pdb import pdb;pdb.set_trace()
+iabbrev pdb breakpoint()
 

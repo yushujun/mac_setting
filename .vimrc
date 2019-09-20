@@ -23,6 +23,7 @@ Plug 'skywind3000/asyncrun.vim'  " vim异步执行命令
 Plug 'davidhalter/jedi-vim', { 'for': 'python'} " python代码补全及跳转定义
 Plug 'ludovicchabant/vim-gutentags' " tags管理
 Plug 'ternjs/tern_for_vim' " js语法补全
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -193,7 +194,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "autocmd vimenter * NERDTree
 
 " 隐藏不需要显示的文件，如pyc
-let NERDTreeIgnore=['\.pyc$']
+let NERDTreeIgnore=['\.pyc$', '__pycache__']
 
 
 " Put this in vimrc or a plugin file of your own.
@@ -349,6 +350,26 @@ let g:jedi#completions_enabled = 0
 " vim async run rs window
 let g:asyncrun_open = 8
 
+" prettier settings
+nmap <F6> <Plug>(Prettier)
+" Running before saving async (vim 8+)
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+" max line length that prettier will wrap on
+" Prettier default: 80
+let g:prettier#config#print_width = 120
+" print semicolons
+" Prettier default: true
+let g:prettier#config#semi = 'false'
+" single quotes over double quotes
+" Prettier default: false
+let g:prettier#config#single_quote = 'true'
+" By default parsing errors will open the quickfix but can also be disabled
+let g:prettier#quickfix_enabled = 0
+" The command :Prettier by default is synchronous but can also be forced async
+let g:prettier#exec_cmd_async = 1
+
+
 " <F5>或leader r 运行shell、python、javascript、c等程序
 nmap <leader>r :call CompileRunFileAsync()<CR>
 func! CompileRunFileAsync()
@@ -382,6 +403,11 @@ func! CompileRunFileSync()
   endif
 endfunc
 
-" abbreviation
-iabbrev pdb breakpoint()
-
+map <leader>e :call InsertDebugger()<CR>
+func! InsertDebugger()
+  if &filetype == 'javascript' || &filetype == 'typescript' || &filetype == 'vue'
+    exec "normal odebugger\<Esc>"
+  elseif &filetype == 'python'
+    exec "normal obreakpoint()\<Esc>"
+  endif
+endfunc

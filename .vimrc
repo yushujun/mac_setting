@@ -411,3 +411,12 @@ func! InsertDebugger()
     exec "normal obreakpoint()\<Esc>"
   endif
 endfunc
+
+map <leader>t :call InsertPrint()<CR>
+func! InsertPrint()
+  if &filetype == 'javascript' || &filetype == 'typescript' || &filetype == 'vue'
+    exec "normal oconsole.log()"
+  elseif &filetype == 'python'
+    exec "normal oprint()"
+  endif
+endfunc

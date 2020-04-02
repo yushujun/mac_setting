@@ -376,9 +376,9 @@ nmap <leader>r :call CompileRunFileAsync()<CR>
 func! CompileRunFileAsync()
   exec 'w'
   if &filetype == 'c'
-    exec "AsyncRun! gcc % -o % && ./%<"
+    exec "AsyncRun! gcc % -o %< && ./%<"
   elseif &filetype == 'cpp'
-    exec "AsyncRun! g++ % -o % && ./%<"
+    exec "AsyncRun! g++ % -o %< && ./%<"
   elseif &filetype == 'python'
     exec "AsyncRun! python3.7 %"
   elseif &filetype == 'javascript'
@@ -390,7 +390,7 @@ endfunc
 
 map <F5> :call CompileRunFileSync()<CR>
 func! CompileRunFileSync()
-  exec 'w'
+  " exec 'w'
   if &filetype == 'c'
     exec '!clear && gcc % -o %< && ./%<'
   elseif &filetype == 'cpp'

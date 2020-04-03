@@ -24,6 +24,7 @@ Plug 'davidhalter/jedi-vim', { 'for': 'python'} " python代码补全及跳转定
 Plug 'ludovicchabant/vim-gutentags' " tags管理
 Plug 'ternjs/tern_for_vim' " js语法补全
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp'}
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -67,7 +68,10 @@ set history=200
 set backspace=2
 
 " 设置tags
-set tags=./.tags;,.tags
+" c ctags: ctags -R --c++-kinds=+p --fields=+iaS --extras=+q /usr/include
+" c++ stl tags: https://www.vim.org/scripts/script.php?script_id=2358
+" ctags -R --c++-kinds=+p --fields=+iaS --extras=+q /usr/include
+set tags=./.tags,.tags,/Users/yushujun/.vim/stl_tags,/Users/yushujun/.vim/sys_tags
 
 " 设置快捷键将选中文本块复制至系统剪贴板
 vnoremap <leader>y "+y
@@ -250,6 +254,7 @@ if !isdirectory(s:vim_tags)
 " 配置 ctags 的参数
 let g:gutentags_ctags_extra_args = ['--fields=+niazSl', '--extras=+q']
 let g:gutentags_ctags_extra_args += ['--python-kinds=-iv']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+plxcdefgmnstuv']
 let g:gutentags_ctags_exclude = ['node_modules']
 
 " nerdcommenter vue文件注释
@@ -323,14 +328,14 @@ endfunction
 " ycm close preview
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_server_python_interpreter='/usr/bin/python2.7'
+let g:ycm_server_python_interpreter='/usr/local/bin/python3'
 let g:ycm_python_interpreter_path = '/usr/local/bin/python3'
 let g:ycm_python_sys_path = ['/usr/local/lib/python3.7/site-packages']
 let g:ycm_extra_conf_vim_data = [
   \  'g:ycm_python_interpreter_path',
   \  'g:ycm_python_sys_path'
   \]
-let g:ycm_global_ycm_extra_conf='~/.vim/autoload/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
 
 " vim-vue stop check preprocessor
 let g:vue_disable_pre_processors = 1
@@ -378,7 +383,7 @@ func! CompileRunFileAsync()
   if &filetype == 'c'
     exec "AsyncRun! gcc % -o %< && ./%<"
   elseif &filetype == 'cpp'
-    exec "AsyncRun! g++ % -o %< && ./%<"
+    exec "AsyncRun! g++ -std=c++11 % -o %< && ./%<"
   elseif &filetype == 'python'
     exec "AsyncRun! python3.7 %"
   elseif &filetype == 'javascript'
@@ -394,7 +399,7 @@ func! CompileRunFileSync()
   if &filetype == 'c'
     exec '!clear && gcc % -o %< && ./%<'
   elseif &filetype == 'cpp'
-    exec '!clear && g++ % -o %< && ./%<'
+    exec '!clear && g++ -std=c++11 % -o %< && ./%<'
   elseif &filetype == 'python'
     exec '!clear && python3.7 %'
   elseif &filetype == 'javascript'
